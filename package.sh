@@ -6,7 +6,7 @@ APP_NAME="屏幕十字标尺"
 APP_DIR="$ROOT_DIR/build/$APP_NAME.app"
 DIST_DIR="$ROOT_DIR/dist"
 PKGROOT="$ROOT_DIR/build/pkgroot"
-VERSION="1.1.0"
+VERSION="1.1.1"
 
 "$ROOT_DIR/build.sh" >/dev/null
 rm -rf "$DIST_DIR" "$PKGROOT"

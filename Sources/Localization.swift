@@ -15,6 +15,14 @@ enum RulerStringKey {
     case language
     case appearance
     case rulerColor
+    case yellow
+    case green
+    case red
+    case cyan
+    case black
+    case white
+    case customColor
+    case customColorPanelTitle
     case millimeterTicks
     case millimeterHelp
     case showNumbers
@@ -69,6 +77,14 @@ func rulerText(_ key: RulerStringKey, language: RulerLanguage) -> String {
     case .language: text = ("界面语言", "Language")
     case .appearance: text = ("外观与显示", "Appearance & Display")
     case .rulerColor: text = ("标尺颜色", "Ruler color")
+    case .yellow: text = ("黄色（默认）", "Yellow (Default)")
+    case .green: text = ("绿色", "Green")
+    case .red: text = ("红色", "Red")
+    case .cyan: text = ("青色", "Cyan")
+    case .black: text = ("黑色", "Black")
+    case .white: text = ("白色", "White")
+    case .customColor: text = ("自选色…", "Custom Color…")
+    case .customColorPanelTitle: text = ("选择标尺颜色", "Choose Ruler Color")
     case .millimeterTicks: text = ("显示毫米刻度", "Show millimeter ticks")
     case .millimeterHelp: text = ("关闭时仅显示厘米主刻度。", "When off, only centimeter ticks are shown.")
     case .showNumbers: text = ("显示坐标数字", "Show coordinate numbers")
@@ -121,6 +137,6 @@ enum RulerProduct {
     static let license = "CC BY 4.0"
 
     static var version: String {
-        Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.1.0"
+        Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.1.1"
     }
 }

@@ -12,8 +12,36 @@ private let centimeterFormatter: NumberFormatter = {
     return formatter
 }()
 
+private final class RulerColorPanelController: NSObject, ObservableObject {
+    private weak var state: RulerState?
+
+    func present(for state: RulerState) {
+        self.state = state
+        let panel = NSColorPanel.shared
+        panel.title = rulerText(.customColorPanelTitle, language: state.language)
+        panel.showsAlpha = false
+        panel.isContinuous = true
+        panel.color = state.rulerColor
+        panel.setTarget(self)
+        panel.setAction(#selector(colorChanged(_:)))
+        NSApp.activate(ignoringOtherApps: true)
+        panel.orderFrontRegardless()
+    }
+
+    func dismiss() {
+        let panel = NSColorPanel.shared
+        panel.orderOut(nil)
+        state = nil
+    }
+
+    @objc private func colorChanged(_ sender: NSColorPanel) {
+        state?.setCustomRulerColor(sender.color)
+    }
+}
+
 struct RulerSettingsView: View {
     @ObservedObject var state: RulerState
+    @StateObject private var colorPanel = RulerColorPanelController()
 
     private var language: RulerLanguage { state.language }
 
@@ -72,14 +100,32 @@ struct RulerSettingsView: View {
     private var appearanceSection: some View {
         GroupBox(label: Label(t(.appearance), systemImage: "paintpalette")) {
             VStack(alignment: .leading, spacing: 10) {
-                ColorPicker(
-                    t(.rulerColor),
-                    selection: Binding(
-                        get: { Color(nsColor: state.rulerColor) },
-                        set: { state.setRulerColor(NSColor($0)) }
-                    ),
-                    supportsOpacity: false
-                )
+                HStack {
+                    Text(t(.rulerColor))
+                    Spacer()
+                    RoundedRectangle(cornerRadius: 5)
+                        .fill(Color(nsColor: state.rulerColor))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 5)
+                                .stroke(Color(nsColor: .separatorColor), lineWidth: 1)
+                        )
+                        .frame(width: 34, height: 20)
+                    Menu {
+                        ForEach(RulerColorPreset.allCases) { preset in
+                            Button(rulerText(preset.localizedKey, language: language)) {
+                                state.setColorPreset(preset)
+                                if preset == .custom {
+                                    colorPanel.present(for: state)
+                                } else {
+                                    colorPanel.dismiss()
+                                }
+                            }
+                        }
+                    } label: {
+                        Text(rulerText(state.colorPreset.localizedKey, language: language))
+                            .frame(minWidth: 112, alignment: .leading)
+                    }
+                }
                 Divider()
                 Toggle(t(.millimeterTicks), isOn: Binding(
                     get: { state.showsMillimeterTicks },

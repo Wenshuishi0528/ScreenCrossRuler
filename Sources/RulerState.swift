@@ -19,9 +19,46 @@ private enum RulerDefaultsKey {
     static let showsNumbers = prefix + "showsNumbers"
     static let transparentCenter = prefix + "transparentCenter"
     static let isLocked = prefix + "isLocked"
+    static let colorPreset = prefix + "colorPreset"
     static let colorRed = prefix + "colorRed"
     static let colorGreen = prefix + "colorGreen"
     static let colorBlue = prefix + "colorBlue"
+}
+
+enum RulerColorPreset: String, CaseIterable, Identifiable {
+    case yellow
+    case green
+    case red
+    case cyan
+    case black
+    case white
+    case custom
+
+    var id: String { rawValue }
+
+    var localizedKey: RulerStringKey {
+        switch self {
+        case .yellow: return .yellow
+        case .green: return .green
+        case .red: return .red
+        case .cyan: return .cyan
+        case .black: return .black
+        case .white: return .white
+        case .custom: return .customColor
+        }
+    }
+
+    var fixedColor: NSColor? {
+        switch self {
+        case .yellow: return NSColor(calibratedRed: 1.0, green: 0.78, blue: 0.12, alpha: 1)
+        case .green: return NSColor(calibratedRed: 0.20, green: 0.80, blue: 0.30, alpha: 1)
+        case .red: return NSColor(calibratedRed: 1.0, green: 0.24, blue: 0.20, alpha: 1)
+        case .cyan: return NSColor(calibratedRed: 0.0, green: 0.78, blue: 1.0, alpha: 1)
+        case .black: return NSColor(calibratedRed: 0.04, green: 0.04, blue: 0.04, alpha: 1)
+        case .white: return NSColor(calibratedWhite: 1.0, alpha: 1)
+        case .custom: return nil
+        }
+    }
 }
 
 struct RulerDisplayMetric: Equatable {
@@ -58,6 +95,7 @@ final class RulerState: ObservableObject {
     @Published private(set) var showsNumbers: Bool
     @Published private(set) var transparentCenter: Bool
     @Published private(set) var isLocked: Bool
+    @Published private(set) var colorPreset: RulerColorPreset
     @Published private(set) var rulerColor: NSColor
 
     private let defaults: UserDefaults
@@ -77,16 +115,28 @@ final class RulerState: ObservableObject {
         transparentCenter = storedBool(RulerDefaultsKey.transparentCenter, default: true)
         isLocked = storedBool(RulerDefaultsKey.isLocked, default: false)
 
+        let hasStoredCustomColor = defaults.object(forKey: RulerDefaultsKey.colorRed) != nil
+            && defaults.object(forKey: RulerDefaultsKey.colorGreen) != nil
+            && defaults.object(forKey: RulerDefaultsKey.colorBlue) != nil
+        let initialColorPreset = RulerColorPreset(
+            rawValue: defaults.string(forKey: RulerDefaultsKey.colorPreset) ?? ""
+        ) ?? (hasStoredCustomColor ? .custom : .yellow)
+        colorPreset = initialColorPreset
+
         func storedColorComponent(_ key: String, fallback: CGFloat) -> CGFloat {
             guard defaults.object(forKey: key) != nil else { return fallback }
             return min(max(CGFloat(defaults.double(forKey: key)), 0), 1)
         }
-        rulerColor = NSColor(
-            calibratedRed: storedColorComponent(RulerDefaultsKey.colorRed, fallback: 1.0),
-            green: storedColorComponent(RulerDefaultsKey.colorGreen, fallback: 0.78),
-            blue: storedColorComponent(RulerDefaultsKey.colorBlue, fallback: 0.12),
-            alpha: 1
-        )
+        if let presetColor = initialColorPreset.fixedColor {
+            rulerColor = presetColor
+        } else {
+            rulerColor = NSColor(
+                calibratedRed: storedColorComponent(RulerDefaultsKey.colorRed, fallback: 1.0),
+                green: storedColorComponent(RulerDefaultsKey.colorGreen, fallback: 0.78),
+                blue: storedColorComponent(RulerDefaultsKey.colorBlue, fallback: 0.12),
+                alpha: 1
+            )
+        }
 
         let loadedMode = RulerResizeMode(
             rawValue: defaults.string(forKey: RulerDefaultsKey.resizeMode) ?? ""
@@ -308,7 +358,25 @@ final class RulerState: ObservableObject {
         defaults.set(value, forKey: RulerDefaultsKey.isLocked)
     }
 
+    func setColorPreset(_ preset: RulerColorPreset) {
+        colorPreset = preset
+        defaults.set(preset.rawValue, forKey: RulerDefaultsKey.colorPreset)
+        if let color = preset.fixedColor {
+            applyRulerColor(color)
+        }
+    }
+
+    func setCustomRulerColor(_ color: NSColor) {
+        colorPreset = .custom
+        defaults.set(RulerColorPreset.custom.rawValue, forKey: RulerDefaultsKey.colorPreset)
+        applyRulerColor(color)
+    }
+
     func setRulerColor(_ color: NSColor) {
+        setCustomRulerColor(color)
+    }
+
+    private func applyRulerColor(_ color: NSColor) {
         guard let rgb = color.usingColorSpace(.deviceRGB) else { return }
         rulerColor = NSColor(
             calibratedRed: rgb.redComponent,

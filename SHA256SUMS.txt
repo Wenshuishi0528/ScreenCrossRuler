@@ -1,2 +1,2 @@
-88790df55e9b8e02b2c851a4e44e05da4f9da831f7bb0f387515bc7656224d78  ScreenCrossRuler-1.1.0-macOS-universal.zip
-8d555382bc8a6206269b090239c111873d574c1acc9c614cf9205af5e8d40927  ScreenCrossRuler-1.1.0-unsigned.pkg
+3464a54fc5ff1773bd1f5ee678fc9b6c6d3fac9a1f281869b7d029680dcf0933  ScreenCrossRuler-1.1.1-macOS-universal.zip
+c4867169ea656e8636fa18c2f046d2e3b8eefd1804ccea02dc58ba7ace75d16f  ScreenCrossRuler-1.1.1-unsigned.pkg

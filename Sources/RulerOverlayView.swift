@@ -229,9 +229,9 @@ final class RulerOverlayView: NSView {
         } else {
             context.setFillColor(color.cgColor)
             context.fillEllipse(in: rect(around: geometry.center, radius: 6.5))
-            context.setFillColor(NSColor.black.withAlphaComponent(0.9).cgColor)
-            context.fillEllipse(in: rect(around: geometry.center, radius: 2.2))
         }
+        context.setFillColor(NSColor.black.withAlphaComponent(0.95).cgColor)
+        context.fillEllipse(in: rect(around: geometry.center, radius: 2.2))
     }
 
     private func tickLength(for tenth: Int) -> CGFloat {

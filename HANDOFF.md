@@ -2,7 +2,7 @@
 
 ## 当前状态
 
-- 版本：1.1.0（build 3）
+- 版本：1.1.1（build 4）
 - 作者：wenshuishi0528
 - 许可：Creative Commons Attribution 4.0 International（CC BY 4.0）
 - 平台：macOS 12 及以上
@@ -11,13 +11,13 @@
 - Bundle ID：`local.codex.screen-cross-ruler`
 - GitHub 目标：`Wenshuishi0528/ScreenCrossRuler`（Public）
 
-## 1.1.0 已实现
+## 1.1.1 已实现
 
 - 无边框透明悬浮层，窗口级别为 `screenSaver`，可加入所有 Space 和全屏空间。
 - 中心拖动整套标尺；四个端点拖动长度。
 - “中心对称”和“四边独立”两种缩放模式。
 - 设置窗口按厘米输入长度及中心位置；位置以显示器左上角为原点。
-- 自定义标尺颜色。
+- 标尺颜色提供黄色（默认）、绿色、红色、青色、黑色、白色预设；“自选色…”立即打开 macOS 原生选色窗口。
 - 中文 / English 设置与菜单即时切换。
 - 毫米刻度显示开关；关闭时只绘制厘米主刻度。
 - 坐标数字显示开关。
@@ -45,7 +45,8 @@
 - 独立模式的设置面板显示左、右、上、下四段长度。
 - 单段最短 0.5 cm、最长 500 cm；端点不能穿过中心。
 - 黑色外描边保留，不随用户颜色改变，以确保浅色背景下仍可辨认。
-- “中心透明”会清除中心孔内的轴线和填充，只保留黑色外环。
+- “中心透明”会清除中心孔内的横轴、纵轴和颜色填充，保留黑色外环，并在正中心重新绘制一个小黑色原点。
+- 关闭“中心透明”时，黑色外环内使用当前标尺颜色填充，小黑色原点仍保留。
 - “锁定”只禁用拖拽命中，不影响设置窗口精确输入或跨屏找回。
 - CC BY 4.0 按用户明确要求应用于整个公开项目；`ATTRIBUTION.md` 给出中英文署名方式。
 
@@ -77,14 +78,16 @@ cd /path/to/ScreenCrossRuler
 - 严格代码签名验证。
 - 双架构检查。
 
-## 1.1.0 已完成的界面验证
+## 1.1.1 已完成的界面验证
 
-- 中文默认界面：毫米关闭、数字打开、中心透明、未锁定。
-- 英文组合界面：青色、毫米打开、数字关闭、中心不透明、锁定。
-- 英文窗口标题为 `Screen Cross Ruler Settings`，中文标题为 `屏幕十字标尺设置`。
-- 两种组合下，设置窗口 `layer=0`、悬浮层 `layer=1000`，均处于屏幕上。
+- 默认值测试确认：中文、黄色、毫米关闭、数字打开、中心透明、未锁定。
+- 英文设置窗口实机显示 `Yellow (Default)` 颜色预设和 `v1.1.1 · wenshuishi0528`。
+- 下拉菜单实机确认包含 Yellow、Green、Red、Cyan、Black、White、Custom Color 七项。
+- 选择 `Custom Color…` 后，macOS 原生 `Choose Ruler Color` 窗口立即出现。
+- 透明中心在非黑色窗口背景上实机放大确认：横纵轴在内圆断开，黑色外环和小黑色原点保留。
+- 设置窗口 `layer=0`、悬浮层 `layer=1000`、选色窗口 `layer=3`，均实际出现在屏幕上。
 
-## 1.1.0 最终质量门
+## 1.1.1 最终质量门
 
 - `RULER_GEOMETRY_TESTS_PASSED`。
 - `RULER_PREFERENCES_TESTS_PASSED`。
@@ -93,27 +96,20 @@ cd /path/to/ScreenCrossRuler
 - `lipo -archs`：`x86_64 arm64`。
 - ZIP `unzip -t`：无压缩数据错误。
 - PKG `pkgutil --check-signature`：按预期为 `no signature`。
-- ZIP SHA-256：`88790df55e9b8e02b2c851a4e44e05da4f9da831f7bb0f387515bc7656224d78`。
-- PKG SHA-256：`8d555382bc8a6206269b090239c111873d574c1acc9c614cf9205af5e8d40927`。
+- ZIP SHA-256：`3464a54fc5ff1773bd1f5ee678fc9b6c6d3fac9a1f281869b7d029680dcf0933`。
+- PKG SHA-256：`c4867169ea656e8636fa18c2f046d2e3b8eefd1804ccea02dc58ba7ace75d16f`。
 
 ## 发布产物
 
-- `dist/ScreenCrossRuler-1.1.0-macOS-universal.zip`
-- `dist/ScreenCrossRuler-1.1.0-unsigned.pkg`
+- `dist/ScreenCrossRuler-1.1.1-macOS-universal.zip`
+- `dist/ScreenCrossRuler-1.1.1-unsigned.pkg`
 
 发布产物采用本机 ad-hoc 应用签名；PKG 未签名；均未经过 Apple Developer ID 公证。
 
 ## GitHub 公开发布结果
 
 - 公开仓库：<https://github.com/Wenshuishi0528/ScreenCrossRuler>
-- Release：<https://github.com/Wenshuishi0528/ScreenCrossRuler/releases/tag/v1.1.0>
-- 发布源码提交：`15b60912ab688eab0580929368a0b44144fbf139`
-- 标签：`v1.1.0`，本地与远端均指向上述发布提交。
-- Release 状态：`draft=false`、`prerelease=false`，并由 latest API 返回。
-- 远端附件：universal ZIP、unsigned PKG、`SHA256SUMS.txt`，状态均为 `uploaded`。
-- 已从 GitHub 重新下载 ZIP/PKG，并通过 `shasum -a 256 -c SHA256SUMS.txt` 往返验证。
-- GitHub 许可证识别：`Creative Commons Attribution 4.0 International` / `CC-BY-4.0`。
-- 仓库可见性已核验为 `PUBLIC`。
+- 1.1.1 的标签、Release 状态、远端附件和下载往返校验将在公开发布完成后回填。
 
 ## 已知边界
 
