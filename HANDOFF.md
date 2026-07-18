@@ -109,7 +109,15 @@ cd /path/to/ScreenCrossRuler
 ## GitHub 公开发布结果
 
 - 公开仓库：<https://github.com/Wenshuishi0528/ScreenCrossRuler>
-- 1.1.1 的标签、Release 状态、远端附件和下载往返校验将在公开发布完成后回填。
+- Release：<https://github.com/Wenshuishi0528/ScreenCrossRuler/releases/tag/v1.1.1>
+- 发布源码提交：`b8395e6118de796b8b9b64448b57efcb1006a49f`。
+- 标签：`v1.1.1`，本地与远端均指向上述发布提交。
+- Release 状态：`draft=false`、`prerelease=false`，并由 latest API 返回。
+- 远端附件：universal ZIP、unsigned PKG、`SHA256SUMS.txt`，状态均为 `uploaded`。
+- GitHub 返回的 ZIP/PKG SHA-256 摘要与本地 `SHA256SUMS.txt` 完全一致。
+- 已从 GitHub 重新下载 ZIP/PKG，并通过 `shasum -a 256 -c SHA256SUMS.txt` 往返验证。
+- GitHub 许可证识别：`Creative Commons Attribution 4.0 International` / `CC-BY-4.0`。
+- 仓库可见性已核验为 `PUBLIC`。
 
 ## 已知边界
 
