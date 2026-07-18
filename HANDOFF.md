@@ -103,6 +103,18 @@ cd /path/to/ScreenCrossRuler
 
 发布产物采用本机 ad-hoc 应用签名；PKG 未签名；均未经过 Apple Developer ID 公证。
 
+## GitHub 公开发布结果
+
+- 公开仓库：<https://github.com/Wenshuishi0528/ScreenCrossRuler>
+- Release：<https://github.com/Wenshuishi0528/ScreenCrossRuler/releases/tag/v1.1.0>
+- 发布源码提交：`15b60912ab688eab0580929368a0b44144fbf139`
+- 标签：`v1.1.0`，本地与远端均指向上述发布提交。
+- Release 状态：`draft=false`、`prerelease=false`，并由 latest API 返回。
+- 远端附件：universal ZIP、unsigned PKG、`SHA256SUMS.txt`，状态均为 `uploaded`。
+- 已从 GitHub 重新下载 ZIP/PKG，并通过 `shasum -a 256 -c SHA256SUMS.txt` 往返验证。
+- GitHub 许可证识别：`Creative Commons Attribution 4.0 International` / `CC-BY-4.0`。
+- 仓库可见性已核验为 `PUBLIC`。
+
 ## 已知边界
 
 - 实物厘米精度依赖显示器向 macOS 报告的物理尺寸；电视、投影仪、虚拟显示器和部分转接设备可能报告不准。
